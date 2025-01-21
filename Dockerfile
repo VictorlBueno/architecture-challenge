@@ -4,13 +4,13 @@ WORKDIR /app
 
 RUN apk add --no-cache openssl
 
-COPY package.json package-lock.json ./
+COPY ./app/package.json ./app/package-lock.json ./
 
 RUN npm install --omit=dev
 RUN npm run prisma:migrate
 RUN npm run prisma:migrate
 
-COPY . .
+COPY ./app .
 
 EXPOSE 3000
 

@@ -1,0 +1,51 @@
+# kubectl create namespace fiap-clean-arch
+# kubectl apply -k .
+# kubectl get pods --namespace=fiap-clean-arch
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: fiap-clean-arch
+
+resources:
+  - k8s/configmap.yaml
+  - k8s/secrets.yaml
+  - k8s/postgres-pvc.yaml
+  - k8s/postgres-deployment.yaml
+  - k8s/postgres-service.yaml
+  - k8s/nest-deployment.yaml
+  - k8s/nest-service.yaml
+  - k8s/hpa.yaml
+
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: fiap-clean-arch
+      app.kubernetes.io/managed-by: kustomize
+
+namePrefix: prod-
+
+images:
+  - name: nest-app
+    newName: victorlbueno/fiap-challenge
+    newTag: v1
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: nest-app
+      spec:
+        template:
+          metadata:
+            annotations:
+              kubectl.kubernetes.io/restartedAt: '2024-01-21T00:00:00Z'
+          spec:
+            containers:
+              - name: nest-app
+                securityContext:
+                  runAsNonRoot: true
+                  allowPrivilegeEscalation: false
+    target:
+      kind: Deployment
+      name: nest-app
