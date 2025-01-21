@@ -1,0 +1,75 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductCategoryEnum {
+  BURGER
+  PIZZA
+  SANDWICH
+  DRINK
+  DESSERT
+  SNACK
+}
+
+enum OrderStatusEnum {
+  RECEIVED
+  IN_PREPARATION
+  READY
+  FINALIZED
+  CANCELLED
+}
+
+enum PaymentStatusEnum {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Client {
+  id     String  @id @default(uuid()) @db.Uuid
+  name   String
+  cpf    String  @unique
+  orders Order[]
+
+  @@map("TB_CLIENTS")
+}
+
+model Order {
+  id            String            @id @default(uuid()) @db.Uuid
+  clientId      String            @db.Uuid
+  total         Float
+  status        OrderStatusEnum   @default(RECEIVED)
+  paymentStatus PaymentStatusEnum @default(PENDING)
+  createdAt     DateTime          @default(now())
+  client        Client            @relation(fields: [clientId], references: [id])
+  products      ProductOrder[]
+
+  @@map("TB_ORDERS")
+}
+
+model Product {
+  id            String              @id @default(uuid()) @db.Uuid
+  name          String
+  description   String
+  price         Float
+  category      ProductCategoryEnum
+  productOrders ProductOrder[]
+
+  @@map("TB_PRODUCTS")
+}
+
+model ProductOrder {
+  orderId   String  @db.Uuid
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+
+  @@id([orderId, productId])
+  @@map("TB_PRODUCTS_ORDERS")
+}
