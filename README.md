@@ -12,10 +12,12 @@ Sistema de autoatendimento para fast food que permite gerenciar pedidos, produto
 ### Iniciando o sistema
 1. Clone o repositório
 2. Navegue até a pasta do projeto
-3. Execute o comando para aplicar as configurações do Kubernetes ou execute os códigos de forma manual:
+3. Siga uma das opções abaixo para iniciar o sistema:
+#### Via make - kubernetes
 ```bash
 make deploy
 ```
+#### Via manual - kubernetes
 ```bash
 # inicialização dos serviços
 kubectl apply -f db-config.yaml
@@ -36,6 +38,11 @@ kubectl apply -f app-hpa.yaml
 minikube service nest-app-service --url 
 # Adicione /api ao final da URL para acessar a documentação
 # Exemplo: http://192.168.59.100:31024/api
+```
+#### Via docker
+```bash
+cd app
+docker compose up -d
 ```
 
 ## 📝 Fluxo de Uso
@@ -203,3 +210,42 @@ A documentação completa em Swagger da API está disponível em:
 http://url_gerado:3000/api
 # execute para obter a url: minikube service nest-app-service --url 
 ```
+
+# Arquitetura do Sistema
+
+## Requisitos de Negócio
+O sistema de autoatendimento foi desenvolvido para atender a uma lanchonete de bairro que está expandindo. A necessidade surgiu devido ao caos no atendimento sem um sistema de controle de pedidos, onde os atendentes podem esquecer ou errar pedidos complexos, impactando a satisfação do cliente. O sistema tem como objetivo:
+1. Melhorar a eficiência na gestão de pedidos, produtos e clientes.
+2. Garantir que pedidos complexos sejam registrados e preparados corretamente.
+3. Reduzir o erro humano e melhorar a experiência do cliente com um sistema de autoatendimento.
+
+## Requisitos de Infraestrutura
+A arquitetura foi pensada para ser escalável, utilizando Minikube, Docker Hub e Kubernetes.
+
+### 1. **Minikube**:
+- Foi utilizado para criar um ambiente Kubernetes local para desenvolvimento e testes. Isso permite simular a infraestrutura em um cluster local antes da implantação em nuvem.
+
+### 2. **Docker Hub**:
+- As imagens Docker dos serviços (backend da API, banco de dados, etc.) estão armazenadas no Docker Hub, facilitando a distribuição e implantação no Kubernetes.
+
+### 3. **Kubernetes**:
+- A aplicação é orquestrada com Kubernetes, utilizando deployments e serviços para garantir a alta disponibilidade e escalabilidade.
+- A configuração do banco de dados, serviços da API e deployment são todos controlados pelo Kubernetes, com o uso de arquivos YAML para automação da implantação.
+
+## Desenho da Arquitetura
+![FIAP - Challenge drawio](https://github.com/user-attachments/assets/47266fce-24d2-4706-b65c-6dad863e5e24)
+
+1. **Banco de Dados (DB)**:
+    - O banco de dados é configurado no Kubernetes, garantindo que os dados dos pedidos e clientes sejam persistentes e possam ser acessados de forma eficiente.
+
+2. **API (NestJS)**:
+    - A API que gerencia a lógica de negócios e interação com o banco de dados é implantada como um serviço no Kubernetes.
+
+3. **Interface de Autoatendimento**:
+    - Embora não descrita diretamente na API, a interface de autoatendimento que os clientes utilizam é integrada com os endpoints da API para realizar o cadastro de clientes, pedidos, e simulação de pagamentos.
+
+4. **Minikube & Kubernetes**:
+    - Minikube foi utilizado para criar um cluster local para testar a infraestrutura antes da implantação em produção, com Kubernetes garantindo a escalabilidade e gestão de recursos.
+
+## Considerações Finais
+Essa arquitetura reflete uma infraestrutura que pode ser escalada facilmente para lidar com o crescimento da lanchonete, melhorando a eficiência do atendimento e a experiência dos clientes.
