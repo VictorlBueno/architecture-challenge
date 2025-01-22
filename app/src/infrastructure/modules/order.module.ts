@@ -7,7 +7,6 @@ import {UpdateOrderUseCase} from "@/application/usecases/orders/update-order.use
 import {GetOrderPaymentStatusUseCase} from "@/application/usecases/orders/get-order-payment-status.usecase";
 import {GetOrdersUseCase} from "@/application/usecases/orders/get-orders.usecase";
 import {UuidGenerator} from "@/infrastructure/providers/uuid-generator";
-import {GetProductsByCategoryUseCase} from "@/application/usecases/products/get-products-by-category.usecase";
 import {ProductPrismaRepository} from "@/infrastructure/repositories/prisma/product-prisma.repository";
 import {ProductRepository} from "@/domain/repositories/product.repository";
 

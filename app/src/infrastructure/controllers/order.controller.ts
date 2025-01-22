@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Inject, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Get, Inject, Param, Post, Put, Req} from "@nestjs/common";
 import {ApiTags, ApiOperation, ApiResponse, ApiParam} from "@nestjs/swagger";
 import {UpdateOrderUseCase} from "@/application/usecases/orders/update-order.usecase";
 import {CreateOrderDto} from "@/infrastructure/dtos/create-order.dto";
@@ -7,6 +7,7 @@ import {CreateOrderUseCase} from "@/application/usecases/orders/create-orders.us
 import {GetOrdersUseCase} from "@/application/usecases/orders/get-orders.usecase";
 import {GetOrderPaymentStatusUseCase} from "@/application/usecases/orders/get-order-payment-status.usecase";
 import {OrderOutputDto} from "@/application/dtos/order-output.dto";
+import {Request} from "express";
 
 @ApiTags("orders")
 @Controller("orders")
@@ -31,8 +32,11 @@ export class OrderController {
         type: CreateOrderDto,
     })
     @ApiResponse({status: 400, description: "Invalid input data"})
-    async create(@Body() createOrderDto: CreateOrderDto) {
-        return this.createOrderUseCase.execute(createOrderDto);
+    async create(@Body() createOrderDto: CreateOrderDto, @Req() req: Request) {
+        return this.createOrderUseCase.execute({
+            ...createOrderDto,
+            host: `${req.protocol}://${req.get('host')}`
+        });
     }
 
     @Get()
@@ -51,7 +55,6 @@ export class OrderController {
     @ApiParam({
         name: "id",
         description: "Order ID",
-        type: OrderOutputDto,
     })
     @ApiResponse({
         status: 200,

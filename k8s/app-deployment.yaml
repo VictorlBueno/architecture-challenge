@@ -18,7 +18,7 @@ spec:
           command: [ 'sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for db; sleep 2; done;' ]
       containers:
         - name: nest-app
-          image: victorlbueno/fiap-app-challenge:v3
+          image: victorlbueno/fiap-app-challenge:v4
           ports:
             - containerPort: 3000
           env:

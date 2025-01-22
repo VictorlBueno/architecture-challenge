@@ -6,11 +6,14 @@ import {OrderRepository} from "@/domain/repositories/order.repository";
 import {OrderEntity} from "@/domain/entities/order.entity";
 import {ProductRepository} from "@/domain/repositories/product.repository";
 import {CreateOrderOutputDto} from "@/application/dtos/create-order-output.dto";
+import {Inject, Req} from "@nestjs/common";
+import {Request} from "express";
 
 export namespace CreateOrderUseCase {
     export type Input = {
         clientId: string;
         products: string[];
+        host?: string;
     };
 
     export type Output = CreateOrderOutputDto;
@@ -24,7 +27,7 @@ export namespace CreateOrderUseCase {
         }
 
         async execute(input: Input): Promise<Output> {
-            const {clientId, products} = input;
+            const {clientId, products, host} = input;
 
             if (!clientId || !products.length) {
                 throw new BadRequestError("Input data not provided");
@@ -51,7 +54,7 @@ export namespace CreateOrderUseCase {
 
             return {
                 ...entityJSON,
-                paymentLink: `http://localhost:${process.env.PORT}/paymock/${entityJSON.id}`,
+                paymentLink: `${host}/paymock/${entityJSON.id}`, // Substituindo {AQUI}
             };
         }
     }

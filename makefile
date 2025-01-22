@@ -51,7 +51,7 @@ status:
 	   @echo "\n🌐 Documentação da aplicação (Swagger):"
 	   @URL=$$(minikube service nest-app-service --url); echo "$$URL/api"
 
-# Recriar todo o ambiente
+# Recriar o ambiente
 recreate: clean deploy
 
 # Ajuda

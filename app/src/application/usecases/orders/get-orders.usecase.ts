@@ -24,11 +24,9 @@ export namespace GetOrdersUseCase {
             };
 
             const orderedEntities = entities.sort((a, b) => {
-                // Primeiro compara por status (Pronto > Em Preparação > Recebido)
                 const statusDiff = statusOrder[b.status] - statusOrder[a.status];
                 if (statusDiff !== 0) return statusDiff;
 
-                // Se status for igual, ordena por data (mais antigos primeiro)
                 return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
             });
 

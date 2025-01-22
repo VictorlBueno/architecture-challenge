@@ -12,7 +12,11 @@ Sistema de autoatendimento para fast food que permite gerenciar pedidos, produto
 ### Iniciando o sistema
 1. Clone o repositório
 2. Navegue até a pasta do projeto
-3. Siga uma das opções abaixo para iniciar o sistema:
+3. Inicie o minikube
+```bash
+minikube start
+```
+4. Siga uma das opções abaixo para iniciar o sistema:
 #### Via make - kubernetes
 ```bash
 make deploy
