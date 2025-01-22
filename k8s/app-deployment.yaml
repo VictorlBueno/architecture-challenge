@@ -15,10 +15,10 @@ spec:
       initContainers:
         - name: wait-for-db
           image: busybox
-          command: [ 'sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for db; sleep 2; done;' ]
+          command: [ 'sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for db; sleep 2; done;' ]  # Comando para esperar até que o serviço de banco de dados esteja disponível na porta 5432. O script executa repetidamente a verificação de conexão até o banco estar pronto.
       containers:
         - name: nest-app
-          image: victorlbueno/fiap-app-challenge:v4
+          image: victorlbueno/fiap-app-challenge:v4  # Imagem Docker que será utilizada para rodar o container, neste caso, a imagem do aplicativo NestJS.
           ports:
             - containerPort: 3000
           env:
@@ -28,9 +28,9 @@ spec:
                   name: app-config
                   key: DATABASE_URL
           resources:
-            requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
+            requests:  # Recursos mínimos que o Kubernetes deve alocar para o container.
+              cpu: "200m" #  200 milicores de CPU (0,2 cores de CPU).
+              memory: "256Mi"  # 256 MiB de memória RAM.
+            limits: # Limites máximos de recursos que o container pode usar.
+              cpu: "500m"  # 500 milicores de CPU (0,5 cores de CPU).
+              memory: "512Mi" # 512 MiB de memória RAM.

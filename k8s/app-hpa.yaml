@@ -7,18 +7,18 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: nest-app
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: 1  # Número mínimo de réplicas que o Kubernetes deve garantir. Neste caso, sempre haverá pelo menos 1 réplica.
+  maxReplicas: 5  # Número máximo de réplicas que o Kubernetes pode escalar para cima. O HPA não criará mais de 5 réplicas, mesmo que a demanda seja alta.
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 50
+          averageUtilization: 50  # O alvo de utilização média de CPU para escalar. Quando a utilização média de CPU for superior a 50%, o HPA poderá aumentar o número de réplicas.
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 50
+          averageUtilization: 50  # O alvo de utilização média de memória para escalar. Quando a utilização média de memória for superior a 50%, o HPA poderá aumentar o número de réplicas.
