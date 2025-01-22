@@ -12,12 +12,34 @@ Sistema de autoatendimento para fast food que permite gerenciar pedidos, produto
 ### Iniciando o sistema
 1. Clone o repositório
 2. Navegue até a pasta do projeto
-3. Execute o comando para aplicar as configurações do Kubernetes:
+3. Execute o comando para aplicar as configurações do Kubernetes ou execute os códigos de forma manual:
 ```bash
-kubectl apply -f .
+make deploy
+```
+```bash
+# inicialização dos serviços
+kubectl apply -f db-config.yaml
+kubectl apply -f app-config.yaml
+kubectl apply -f db-secret.yaml
+kubectl apply -f db-deployment.yaml
+kubectl apply -f db-service.yaml
+
+# aguardando banco de dados
+kubectl wait --for=condition=ready pod -l app=fiap-db --timeout=60s
+
+# inicialização da aplicação
+kubectl apply -f app-deployment.yaml
+kubectl apply -f app-service.yaml
+kubectl apply -f app-hpa.yaml
+
+# obter a url da aplicação
+minikube service nest-app-service --url 
+# Adicione /api ao final da URL para acessar a documentação
+# Exemplo: http://192.168.59.100:31024/api
 ```
 
 ## 📝 Fluxo de Uso
+Você pode criar diretamente no swagger em /api ou realizar as requisições abaixo.
 
 ### 1. Criar um Cliente
 Crie um novo cliente que será associado aos pedidos.
@@ -178,5 +200,6 @@ O pagamento pode ter os seguintes status:
 ## 📚 Documentação Adicional
 A documentação completa em Swagger da API está disponível em:
 ```
-http://localhost:3000/api
+http://url_gerado:3000/api
+# execute para obter a url: minikube service nest-app-service --url 
 ```

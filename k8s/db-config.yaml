@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+data:
+  POSTGRES_USER: "victor"
+  POSTGRES_DB: "fiap"
+  POSTGRES_PORT: "5432"

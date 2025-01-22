@@ -4,8 +4,9 @@ metadata:
   name: postgres-service
 spec:
   selector:
-    app: postgres
+    app: fiap-db
   ports:
     - protocol: TCP
       port: 5432
       targetPort: 5432
+  type: ClusterIP

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fiap-app
+  template:
+    metadata:
+      labels:
+        app: fiap-app
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for db; sleep 2; done;' ]
+      containers:
+        - name: nest-app
+          image: victorlbueno/fiap-app-challenge:v3
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DATABASE_URL
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
