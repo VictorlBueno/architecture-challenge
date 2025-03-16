@@ -1,5 +1,5 @@
-import {Body, Controller, Get, Inject, Param, Post, Put, Req} from "@nestjs/common";
-import {ApiTags, ApiOperation, ApiResponse, ApiParam} from "@nestjs/swagger";
+import {Body, Controller, Get, Param, Post, Put, Req} from "@nestjs/common";
+import {ApiOperation, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {UpdateOrderUseCase} from "@/application/usecases/orders/update-order.usecase";
 import {CreateOrderDto} from "@/infrastructure/dtos/create-order.dto";
 import {UpdateOrderDto} from "@/infrastructure/dtos/update-order.dto";
@@ -12,17 +12,13 @@ import {Request} from "express";
 @ApiTags("orders")
 @Controller("orders")
 export class OrderController {
-    @Inject(CreateOrderUseCase.UseCase)
-    private createOrderUseCase: CreateOrderUseCase.UseCase;
-
-    @Inject(UpdateOrderUseCase.UseCase)
-    private updateOrderUseCase: UpdateOrderUseCase.UseCase;
-
-    @Inject(GetOrderPaymentStatusUseCase.UseCase)
-    private getOrderPaymentStatusUseCase: GetOrderPaymentStatusUseCase.UseCase;
-
-    @Inject(GetOrdersUseCase.UseCase)
-    private listOrdersUseCase: GetOrdersUseCase.UseCase;
+    constructor(
+        private readonly createOrderUseCase: CreateOrderUseCase.UseCase,
+        private readonly updateOrderUseCase: UpdateOrderUseCase.UseCase,
+        private readonly getOrderPaymentStatusUseCase: GetOrderPaymentStatusUseCase.UseCase,
+        private readonly listOrdersUseCase: GetOrdersUseCase.UseCase
+    ) {
+    }
 
     @Post()
     @ApiOperation({summary: "Create a new order"})

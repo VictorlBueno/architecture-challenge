@@ -8,11 +8,10 @@ import {ClientOutputDto} from "@/application/dtos/client-output.dto";
 @ApiTags("clients")
 @Controller("clients")
 export class ClientController {
-    @Inject(CreateClientUseCase.UseCase)
-    private createClientUseCase: CreateClientUseCase.UseCase;
-
-    @Inject(GetClientUseCase.UseCase)
-    private getClientUseCase: GetClientUseCase.UseCase;
+    constructor(
+        private readonly createClientUseCase: CreateClientUseCase.UseCase,
+        private readonly getClientUseCase: GetClientUseCase.UseCase
+    ) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new client' })

@@ -1,13 +1,15 @@
-import { Controller, Get, Inject, Param } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
-import { PayMockUseCase } from "@/application/usecases/paymock/pay-mock.usecase";
+import {Controller, Get, Param} from "@nestjs/common";
+import {ApiOperation, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {PayMockUseCase} from "@/application/usecases/paymock/pay-mock.usecase";
 import {OrderOutputDto} from "@/application/dtos/order-output.dto";
 
 @ApiTags('payment')
 @Controller("paymock")
 export class PaymockController {
-    @Inject(PayMockUseCase.UseCase)
-    private payMockUseCase: PayMockUseCase.UseCase;
+    constructor(
+        private readonly payMockUseCase: PayMockUseCase.UseCase
+    ) {
+    }
 
     @Get(":id")
     @ApiOperation({
@@ -24,7 +26,7 @@ export class PaymockController {
         description: 'Payment processed successfully',
         type: OrderOutputDto
     })
-    @ApiResponse({ status: 404, description: 'Order not found' })
+    @ApiResponse({status: 404, description: 'Order not found'})
     async update(@Param("id") id: string) {
         return this.payMockUseCase.execute({id});
     }
