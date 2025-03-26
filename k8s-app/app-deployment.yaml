@@ -11,11 +11,7 @@ spec:
     metadata:
       labels:
         app: fiap-app
-    spec:
-      initContainers:
-        - name: wait-for-db
-          image: busybox
-          command: [ 'sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for db; sleep 2; done;' ]  # Comando para esperar até que o serviço de banco de dados esteja disponível na porta 5432. O script executa repetidamente a verificação de conexão até o banco estar pronto.
+    spec: # Comando para esperar até que o serviço de banco de dados esteja disponível na porta 5432. O script executa repetidamente a verificação de conexão até o banco estar pronto.
       containers:
         - name: nest-app
           image: victorlbueno/fiap-app-challenge:v4  # Imagem Docker que será utilizada para rodar o container, neste caso, a imagem do aplicativo NestJS.

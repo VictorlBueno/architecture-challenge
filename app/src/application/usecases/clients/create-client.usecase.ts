@@ -1,10 +1,7 @@
 import {UseCase as DefaultUseCase} from "@/application/shared/usecases/usecase";
 import {ClientOutputDto} from "@/application/dtos/client-output.dto";
-import {ClientRepository} from "@/domain/repositories/client.repository";
-import {BadRequestError} from "@/application/shared/errors/bad-request-error";
 import {ClientEntity} from "@/domain/entities/client.entity";
-import {UuidGenerator} from "@/infrastructure/providers/uuid-generator";
-import {ConflictError} from "@/application/shared/errors/conflict-error";
+import {IamService} from "@/domain/external/iam.service";
 
 export namespace CreateClientUseCase {
     export type Input = {
@@ -16,32 +13,17 @@ export namespace CreateClientUseCase {
 
     export class UseCase implements DefaultUseCase<Input, Output> {
         constructor(
-            private clientRepository: ClientRepository,
-            private uuidGenerator: UuidGenerator,
+            private iamService: IamService
         ) {
         }
 
         async execute(input: Input): Promise<Output> {
-            const {name, cpf} = input;
+            const clientEntity = new ClientEntity({
+                name: input.name,
+                cpf: input.cpf,
+            })
 
-            if (!name || !cpf) {
-                throw new BadRequestError("Input data not provided");
-            }
-
-            const existingClient = await this.clientRepository.cpfExists(cpf);
-
-            if (existingClient) {
-                throw new ConflictError("Client already exists");
-            }
-
-            const entity = new ClientEntity({
-                ...input,
-                id: this.uuidGenerator.generate(),
-            });
-
-            await this.clientRepository.insert(entity);
-
-            return entity.toJSON();
+            return await this.iamService.createUser(clientEntity);
         }
     }
 }
