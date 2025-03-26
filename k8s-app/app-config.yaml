@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  DATABASE_URL: "postgresql://victor:fiap@postgres-service:5432/fiap?schema=public"
+  DATABASE_URL: "postgresql://victorfiapchallenge:92ccaf7541dce@terraform-20250325212613774600000001.cpyshgty15ju.us-east-1.rds.amazonaws.com:5432/fiapchallenge"

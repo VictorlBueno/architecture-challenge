@@ -11,7 +11,7 @@ export class OrderModelMapper {
             clientId: model.clientId,
             status: model.status as OrderStatusEnum,
             paymentStatus: model.paymentStatus as PaymentStatusEnum,
-            total: model.total,
+            total: Number(model.total),
             products: model.products,
             client: ClientModelMapper.toEntity(model.client),
         });

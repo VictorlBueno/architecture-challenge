@@ -1,7 +1,7 @@
 import {Entity} from "@/domain/shared/entities/entity";
 
 export type ClientProps = {
-    id: string;
+    id?: string;
     name: string;
     cpf: string;
 }

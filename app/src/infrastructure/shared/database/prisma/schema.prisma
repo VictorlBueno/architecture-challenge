@@ -37,19 +37,25 @@ model Client {
   cpf    String  @unique
   orders Order[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cpf])
   @@map("TB_CLIENTS")
 }
 
 model Order {
   id            String            @id @default(uuid()) @db.Uuid
   clientId      String            @db.Uuid
-  total         Float
+  total         Decimal           @db.Decimal(10, 2)
   status        OrderStatusEnum   @default(RECEIVED)
   paymentStatus PaymentStatusEnum @default(PENDING)
   createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   client        Client            @relation(fields: [clientId], references: [id])
   products      ProductOrder[]
 
+  @@index([clientId, status])
   @@map("TB_ORDERS")
 }
 
@@ -57,10 +63,11 @@ model Product {
   id            String              @id @default(uuid()) @db.Uuid
   name          String
   description   String
-  price         Float
+  price         Decimal             @db.Decimal(10, 2)
   category      ProductCategoryEnum
   productOrders ProductOrder[]
 
+  @@index([category])
   @@map("TB_PRODUCTS")
 }
 
@@ -71,5 +78,6 @@ model ProductOrder {
   order     Order   @relation(fields: [orderId], references: [id])
 
   @@id([orderId, productId])
+  @@index([orderId])
   @@map("TB_PRODUCTS_ORDERS")
 }

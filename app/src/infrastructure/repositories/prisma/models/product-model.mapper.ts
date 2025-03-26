@@ -8,7 +8,7 @@ export class ProductModelMapper {
             id: model.id,
             name: model.name,
             description: model.description,
-            price: model.price,
+            price: Number(model.price),
             category: model.category as ProductCategoryEnum,
         });
     }

@@ -5,6 +5,8 @@ import {ClientPrismaRepository} from "@/infrastructure/repositories/prisma/clien
 import {CreateClientUseCase} from "@/application/usecases/clients/create-client.usecase";
 import {GetClientUseCase} from "@/application/usecases/clients/get-client.usecase";
 import {UuidGenerator} from "@/infrastructure/providers/uuid-generator";
+import {CognitoService} from "@/infrastructure/external/cognito.service";
+import {IamService} from "@/domain/external/iam.service";
 
 @Module({
     controllers: [ClientController],
@@ -25,21 +27,25 @@ import {UuidGenerator} from "@/infrastructure/providers/uuid-generator";
             inject: [PrismaService],
         },
         {
-            provide: CreateClientUseCase.UseCase,
-            useFactory: (
-                clientRepository: ClientPrismaRepository,
-                uuidGenerator: UuidGenerator,
-            ) => {
-                return new CreateClientUseCase.UseCase(clientRepository, uuidGenerator);
+            provide: "IamService",
+            useFactory: () => {
+                return new CognitoService();
             },
-            inject: ["ClientRepository", "UuidGenerator"],
+            inject: [],
+        },
+        {
+            provide: CreateClientUseCase.UseCase,
+            useFactory: (iamService: IamService) => {
+                return new CreateClientUseCase.UseCase(iamService);
+            },
+            inject: ["IamService"],
         },
         {
             provide: GetClientUseCase.UseCase,
-            useFactory: (clientRepository: ClientPrismaRepository) => {
-                return new GetClientUseCase.UseCase(clientRepository);
+            useFactory: (iamService: IamService) => {
+                return new GetClientUseCase.UseCase(iamService);
             },
-            inject: ["ClientRepository"],
+            inject: ["IamService"],
         },
     ],
 })
