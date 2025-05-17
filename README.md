@@ -1,5 +1,3 @@
-Apresentação: https://drive.google.com/file/d/1it6FUNbODpBt_JxGEgvY2uSKSSa91dm4/view?usp=sharing
-
 # Fast Food Self-Service API
 
 Sistema de autoatendimento para fast food que permite gerenciar pedidos, produtos e clientes de forma eficiente.
